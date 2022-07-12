@@ -1,4 +1,6 @@
-import { galleryItems } from "./gallery-items.js";
+import { galleryItems } from './gallery-items.js';
+// Change code below this line
+
 
 const galleryRefs = document.querySelector(".gallery");
 galleryRefs.addEventListener("click", onShowBigImage);
@@ -47,3 +49,4 @@ function onShowBigImage(e) {
     }
   }
 }
+console.log(galleryItems);
