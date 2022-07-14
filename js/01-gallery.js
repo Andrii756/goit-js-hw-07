@@ -40,6 +40,7 @@ function onShowBigImage(e) {
 
   if (modal.visible()) {
     window.addEventListener("keydown", onPressKeyESC);
+    window.addEventListener("click", clickListener);
   }
 
   function onPressKeyESC(e) {
@@ -48,5 +49,12 @@ function onShowBigImage(e) {
       window.removeEventListener("keydown", onPressKeyESC);
     }
   }
+    function clickListener(e) {
+    if (e.code === "click") {
+      modal.close();
+      window.removeEventListener("click", clickListener);
+  }
+  }
 }
+
 console.log(galleryItems);
