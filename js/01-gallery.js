@@ -1,60 +1,41 @@
 import { galleryItems } from './gallery-items.js';
 // Change code below this line
-
-
-const galleryRefs = document.querySelector(".gallery");
-galleryRefs.addEventListener("click", onShowBigImage);
-
-(function createMarkup() {
-  const itemMarkup = galleryItems
-    .map(({ original, preview, description }) => {
-      return `
-    <div class="gallery__item">
-        <a class="gallery__link" href="${original}">
-            <img
-                class="gallery__image"
-                src="${preview}"
-                data-source="${original}"
-                alt="${description}"
-            />
-        </a>
-    </div>
-    `;
-    })
-    .join("");
-  galleryRefs.insertAdjacentHTML("beforeend", itemMarkup);
-})();
-
-function onShowBigImage(e) {
-  e.preventDefault();
-  if (!e.target.classList.contains("gallery__image")) {
+console.log(galleryItems);
+const galleryEl = document.querySelector('.gallery');
+const createGalleryListMarkup = gallery =>
+  gallery
+    .map(
+      ({ description, original, preview }) => `<div class="gallery__item">
+  <a class="gallery__link" href="${original}">
+    <img
+      class="gallery__image"
+      src="${preview}"
+      data-source="${original}"
+      alt="${description}"
+    />
+  </a> 
+</div>`
+    )
+    .join('');
+const galleryItemsList = createGalleryListMarkup(galleryItems);
+galleryEl.insertAdjacentHTML('beforeend', galleryItemsList);
+galleryEl.addEventListener('click', handlerClickInage);
+let instance = null;
+function handlerClickInage(event) {
+  event.preventDefault();
+  const image = event.target;
+  const imageValue = image.dataset.source;
+  if (image === event.currantTarget) {
     return;
   }
-
-  let bigImageSrc = e.target.dataset.source;
-
-  const modal = basicLightbox.create(
-    `<img src="${bigImageSrc}" width="800" height="600">`
-  );
-  modal.show();
-
-  if (modal.visible()) {
-    window.addEventListener("keydown", onPressKeyESC);
-    window.addEventListener("click", clickListener);
-  }
-
-  function onPressKeyESC(e) {
-    if (e.code === "Escape") {
-      modal.close();
-      window.removeEventListener("keydown", onPressKeyESC);
-    }
-  }
-    function clickListener(e) {
-    if (e.code === "click") {
-      modal.close();
-      window.removeEventListener("click", clickListener);
-  }
+  instance = basicLightbox.create(` <img src="${imageValue}" width="800" height="600">`, {
+    onShow: () => window.addEventListener('keydown', closebyEscape),
+    onClose: () => window.removeEventListener('keydown', closebyEscape),
+  });
+  instance.show();
+}
+function closebyEscape(event) {
+  if (event.code === 'Escape') {
+    instance.close();
   }
 }
-
-console.log(galleryItems);
